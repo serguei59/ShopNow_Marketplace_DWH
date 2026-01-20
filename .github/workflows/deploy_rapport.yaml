@@ -1,9 +1,9 @@
-name: Deploy Main Site
+name: Deploy E6 Report
 
 on:
-  workflow_dispatch:
   push:
     branches: [ "main" ]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -13,19 +13,30 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - run: pip install -r requirements.txt
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
 
-      - run: mkdocs build --config-file mkdocs.yaml
+      - name: Build MkDocs report
+        run: mkdocs build --config-file mkdocs_rapport.yaml
+
+      - name: Prepare public folder
+        run: |
+          mkdir -p public/rapport
+          cp -r site/* public/rapport/
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: ./site
+          path: ./public
 
   deploy:
     needs: build
