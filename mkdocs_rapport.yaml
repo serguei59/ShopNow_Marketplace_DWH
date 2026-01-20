@@ -1,0 +1,74 @@
+site_name: "Livrable E6 : Rapport – DWH Marketplace ShopNow"
+site_description: "Version condensée pour présentation et livrable certifiant"
+site_author: "Serge Buasa"
+site_url: ""
+repo_url: "https://github.com/serguei59/ShopNow_Marketplace_DWH"
+
+# Contenu du site – version condensée
+docs_dir: docs_rapport
+
+nav:
+  - Couverture: 00_couverture/cover.md
+  - Accueil: index.md
+  - Contexte:
+      - "Résumé contexte et enjeux": 01_contexte/resume_contexte.md
+      - "Objectifs de la mission": 01_contexte/objectifs_mission.md
+  - Diagnostic:
+      - "Architecture & limites": 02_diagnostic/architecture_limites.md
+      - "Impacts Marketplace": 02_diagnostic/impacts_marketplace.md
+  - MCO et SCD2:
+      - "Socle obligatoire MCO": 05_socle_MCO/resume_socle_MCO.md
+      - "Adaptations SCD2": 06_SCD2/resume_SCD2.md
+  - Sécurité & Cloisonnement: 07_securite/resume_securite.md
+  - DRP / Backups: 08_DRP/resume_DRP.md
+  - Pipelines & Power BI: 
+      - "Résumé pipelines": 10_pipelines/resume_pipelines.md
+      - "Tableaux Power BI": 11_powerbi/resume_dashboards.md
+  - Validation E6: 12_validation_E6/resume_validation.md
+
+theme:
+  name: material
+  language: fr
+  features:
+    - navigation.tabs
+    - navigation.top
+    - navigation.sections
+    - content.code.copy
+    - search.suggest
+    - toc.integrate
+
+markdown_extensions:
+  - admonition
+  - footnotes
+  - codehilite
+  - pymdownx.details
+  - admonition
+  - attr_list
+  - md_in_html
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - pymdownx.tasklist
+  - toc:
+      permalink: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+
+plugins:
+  - search
+  - pdf-export:
+      enabled: true
+      media_type: print
+      verbose: false
+      combined: true
+      toc_level: 2
+      cover: docs_rapport/00_couverture/cover.png # optionnel
+      header_template: docs_rapport/00_couverture/header.html
+      footer_template: docs_rapport/00_couverture/footer.html
+      page_size: A4
+      landscape: false
+      margin_top: 25mm
+      margin_bottom: 20mm
+      margin_left: 20mm
+      margin_right: 20mm

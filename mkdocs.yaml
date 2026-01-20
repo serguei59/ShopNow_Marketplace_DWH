@@ -1,0 +1,97 @@
+site_name: "Projet E6 – Marketplace ShopNow"
+site_description: "Maintenance, évolution et adaptation d’un Data Warehouse dans un contexte marketplace multi-vendeurs"
+site_author: "Serge Buasa"
+repo_url: "https://github.com/serguei59/ShopNow_Marketplace_DWH"
+nav:
+  - Accueil: index.md
+  - 1. Contexte:
+      - "Contexte général": 01_contexte/contexte.md
+      - "Enjeux de la Marketplace": 01_contexte/enjeux_marketplace.md
+      - "Objectifs de la mission": 01_contexte/objectifs_mission.md
+  - 2. Diagnostic:
+      - "Architecture existante": 02_diagnostic/analyse_architecture_existante.md
+      - "Limites et risques": 02_diagnostic/limites_et_risques.md
+      - "Impacts Marketplace": 02_diagnostic/impacts_marketplace.md
+  - 3. Situations professionnelles:
+      - "Vue générale": 03_situations/situations_overview.md
+      - "Situations MCO (C16)": 03_situations/situations_MCO.md
+      - "Situations SCD2 (C17)": 03_situations/situations_SCD.md
+      - "Situations multi-sources": 03_situations/situations_multi_sources.md
+      - "Situations DRP / pertes de données": 03_situations/situations_DRP.md
+  - 4. Architecture:
+      - "Architecture globale": 04_architecture/architecture_globale.md
+      - "Schémas Mermaid": 04_architecture/schema_mermaid.md
+      - "Déploiement Terraform": 04_architecture/schema_deploiement_terraform.md
+  - 5. Socle obligatoire MCO:
+      - "Supervision & Logging": 05_socle_MCO/supervision_logging.md
+      - "Alerting & SLA": 05_socle_MCO/alerting_SLA.md
+      - "Qualité des données": 05_socle_MCO/qualite_donnees.md
+      - "Processus MCO": 05_socle_MCO/processus_MCO.md
+      - "Sécurité & RLS": 05_socle_MCO/controle_acces_RLS.md
+      - "Backups & DRP": 05_socle_MCO/backups_et_DRP.md
+  - 6. Adaptations SCD2 (C17):
+      - "Modélisation SCD2": 06_SCD2/modelisation_SCD2.md
+      - "Adaptations ETL": 06_SCD2/adaptations_ETL.md
+      - "Schéma DWH": 06_SCD2/schema_dwh.md
+  - 7. Sécurité:
+      - "Identités": 07_securite/gestion_identites.md
+      - "Rôles & permissions": 07_securite/roles_permissions.md
+      - "Cloisonnement multi-vendeur": 07_securite/cloisonnement_multi_vendeur.md
+  - 8. Plan DRP:
+      - "Plan de continuité": 08_DRP/plan_continuite.md
+      - "Scénarios de restauration": 08_DRP/restauration_scenarios.md
+      - "Automatisation des backups": 08_DRP/automatisation_backups.md
+  - 9. Infrastructure Terraform:
+      - "Structure des modules": 09_terraform/structure_modules.md
+      - "Variables & outputs": 09_terraform/variables_outputs.md
+      - "Plan de déploiement": 09_terraform/plan_deploiement.md
+  - 10. Pipelines:
+      - "Pipelines Data Factory": 10_pipelines/datafactory_pipelines.md
+      - "Jobs Stream Analytics": 10_pipelines/streamanalytics_jobs.md
+      - "Ingestion Event Hubs": 10_pipelines/eventhubs_ingestion.md
+  - 11. Power BI:
+      - "Dashboards SLA": 11_powerbi/dashboards_SLA.md
+      - "Rapports vendeurs": 11_powerbi/dashboards_vendeurs.md
+      - "Configuration RLS": 11_powerbi/RLS_configuration.md
+  - 12. Validation E6:
+      - "Grille C16/C17": 12_validation_E6/grille_C16_C17.md
+      - "Correspondance: situations ↔ compétences": 12_validation_E6/correspondance_situations_competences.md
+      - "Preuves et captures": 12_validation_E6/preuves_ecran.md
+  - 13. Annexes:
+      - Glossaire: 13_annexes/glossaire.md
+      - Jeux de données: 13_annexes/jeux_donnees.md
+      - Exemples de code: 13_annexes/exemples_code.md
+      - Références: 13_annexes/references.md
+
+theme:
+  name: material
+  language: fr
+  features:
+    - navigation.tabs
+    - navigation.top
+    - navigation.sections
+    - navigation.expand
+    - content.code.copy
+    - content.action.edit
+    - search.suggest
+    - search.highlight
+    - toc.integrate
+
+markdown_extensions:
+  - admonition
+  - footnotes
+  - codehilite
+  - pymdownx.superfences
+  - pymdownx.highlight
+  - pymdownx.tabbed
+  - pymdownx.details
+  - pymdownx.tasklist
+  - pymdownx.arithmatex
+  - pymdownx.emoji
+  - toc:
+      permalink: true
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: "https://github.com/serguei59/ShopNow_Marketplace_DWH"

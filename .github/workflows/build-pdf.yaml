@@ -1,0 +1,33 @@
+name: Build PDF Rapport E6
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Install dependencies
+        run: |
+          pip install mkdocs mkdocs-material mkdocs-pdf-export-plugin
+
+      - name: Build PDF
+        run: |
+          mkdocs pdf-export build -f mkdocs_rapport.yaml
+
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: Livrable E6 Rapport-Maintenance-DWH-PDF
+          path: site/pdf/*.pdf
