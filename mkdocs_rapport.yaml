@@ -6,6 +6,7 @@ repo_url: "https://github.com/serguei59/ShopNow_Marketplace_DWH"
 
 # Contenu du site – version condensée
 docs_dir: docs_rapport
+site_dir: site
 
 nav:
   - Couverture: 00_couverture/cover.md

@@ -1,5 +1,6 @@
 mkdocs
-mkdocs-material
+mkdocs-material[all]
 mkdocs-mermaid2-plugin
 pymdown-extensions
 mkdocs-pdf-export-plugin
+mkdocs-minify-plugin

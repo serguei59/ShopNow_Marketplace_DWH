@@ -2,6 +2,8 @@ site_name: "Projet E6 – Marketplace ShopNow"
 site_description: "Maintenance, évolution et adaptation d’un Data Warehouse dans un contexte marketplace multi-vendeurs"
 site_author: "Serge Buasa"
 repo_url: "https://github.com/serguei59/ShopNow_Marketplace_DWH"
+docs_dir: docs
+site_dir: site
 nav:
   - Accueil: index.md
   - 1. Contexte:
