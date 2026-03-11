@@ -118,7 +118,7 @@ docker push blackphoenix2020/event_hub_producers:latest
 ---
 
 #### Étape 1 — `security/rgpd/registre_traitements.md`
-- **Statut :** [ ] À faire
+- **Statut :** [x] Fait — 2026-03-11
 - **Critère C16 :** Registre des traitements de données personnelles (art. 30 RGPD)
 - **Contenu :**
   - Traitement 1 : Commandes clients — `dim_customer` + `fact_order` — base légale contrat — 10 ans
@@ -131,7 +131,7 @@ docker push blackphoenix2020/event_hub_producers:latest
 ---
 
 #### Étape 2 — `security/rbac/rbac_mapping.md`
-- **Statut :** [ ] À faire
+- **Statut :** [x] Fait — 2026-03-11
 - **Critère C16 :** Nouveaux accès configurés conformément au besoin
 - **Contenu :**
   - Matrice 5 rôles × (Azure RBAC role, SQL permission, périmètre données, MFA requis)
@@ -145,7 +145,7 @@ docker push blackphoenix2020/event_hub_producers:latest
 ---
 
 #### Étape 3 — `security/rgpd/procedures_conformite.md`
-- **Statut :** [ ] À faire
+- **Statut :** [x] Fait — 2026-03-11 (fichier : `procédures conformite.md`)
 - **Critère C16 :** Procédures de tri des données personnelles + traitements de conformité avec fréquence
 - **Contenu :**
   - Procédure anonymisation `fact_clickstream` (purge J+13 mois)
@@ -159,7 +159,7 @@ docker push blackphoenix2020/event_hub_producers:latest
 ---
 
 #### Étape 4 — `security/README.md`
-- **Statut :** [ ] À faire
+- **Statut :** [x] Fait — 2026-03-11
 - **Critère C16 :** Documentation structurée
 - **Contenu :** Index du dossier security/, références aux fichiers, contexte légal (RGPD art. 30, CNIL)
 - **Justification jury :** Point d'entrée du dossier sécurité pour le jury. Signal de rigueur organisationnelle.
@@ -172,7 +172,7 @@ docker push blackphoenix2020/event_hub_producers:latest
 ---
 
 #### Étape 5 — `monitoring/queries/log_errors_last24h.sql`
-- **Statut :** [ ] À faire
+- **Statut :** [x] Fait — 2026-03-11
 - **Critère C16 :** Journalisation catégorisée alertes et erreurs
 - **Contenu (4 requêtes) :**
   - `sys.event_log` — connexions échouées, deadlocks, throttling (24h)
@@ -185,7 +185,7 @@ docker push blackphoenix2020/event_hub_producers:latest
 ---
 
 #### Étape 6 — `monitoring/queries/data_freshness.sql`
-- **Statut :** [ ] À faire
+- **Statut :** [x] Fait — 2026-03-11
 - **Critère C16 :** Alertes ingestion ratée, supervision pipeline
 - **Contenu (4 requêtes) :**
   - Vue consolidée fraîcheur par table (FRAIS / ATTENTION / STALE)
@@ -198,7 +198,7 @@ docker push blackphoenix2020/event_hub_producers:latest
 ---
 
 #### Étape 7 — `monitoring/queries/sla_availability.sql`
-- **Statut :** [ ] À faire
+- **Statut :** [x] Fait — 2026-03-11
 - **Critère C16 :** Indicateurs de service basés sur SLA
 - **Contenu (3 requêtes) :**
   - Taux disponibilité par jour sur 30 jours (connexions ok/total depuis `sys.event_log`) + statut SLA OK/KO
@@ -214,7 +214,7 @@ docker push blackphoenix2020/event_hub_producers:latest
 ---
 
 #### Étape 8 — `monitoring/queries/pipeline_latency.sql`
-- **Statut :** [ ] À faire
+- **Statut :** [x] Fait — 2026-03-11
 - **Critère C16 :** Indicateurs de service, performance pipeline
 - **Contenu (3 requêtes) :**
   - Intervalle moyen entre insertions `fact_order` avec `LAG()` (latence min/max/écart-type sur 500 lignes)
@@ -230,7 +230,7 @@ docker push blackphoenix2020/event_hub_producers:latest
 ---
 
 #### Étape 9 — `monitoring/dashboards/dashboard_sla_spec.md`
-- **Statut :** [ ] À faire
+- **Statut :** [x] Fait — 2026-03-11
 - **Critère C16 :** Tableau de bord permettant de rendre compte de l'ensemble des indicateurs de service
 - **Contenu :**
   - 6 tiles Power BI : disponibilité %, latence fact_order, latence clickstream, taux erreurs connexion, volume journalier, statut SLA global
@@ -244,7 +244,7 @@ docker push blackphoenix2020/event_hub_producers:latest
 ---
 
 #### Étape 10 — `monitoring/dashboards/alert_rules_spec.md`
-- **Statut :** [ ] À faire
+- **Statut :** [x] Fait — 2026-03-11
 - **Critère C16 :** Système d'alerte mis en place et activé en cas d'erreur notifiée dans les journaux
 - **Contenu :**
   - 6 règles Azure Monitor Alert avec : nom, condition, seuil, fenêtre, fréquence évaluation, sévérité, destinataire, action
@@ -257,7 +257,7 @@ docker push blackphoenix2020/event_hub_producers:latest
 ---
 
 #### Étape 11 — `monitoring/README.md`
-- **Statut :** [ ] À faire
+- **Statut :** [x] Fait — 2026-03-11
 - **Critère C16 :** Documentation structurée par cas d'usage
 - **Contenu :** Index du dossier, description des 6 requêtes et 2 spécifications, contexte technique Azure SQL, ressources de référence
 - **Dépendances :** Étapes 5 à 10
