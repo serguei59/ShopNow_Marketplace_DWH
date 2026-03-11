@@ -64,7 +64,18 @@ Ressources créées dans `rg-e6-sbuasa` (francecentral) :
 - Stream Analytics job `asa-shopnow` (démarré automatiquement)
 - ACI `aeh-producers` (producteurs Python actifs)
 
-**Statut :** [ ] P1 corrigé / [ ] P2 déployé
+### P3 — Reconstruire l'image Docker des producers
+
+L'image `sengsathit/event_hub_producers:latest` (prof) est privée/supprimée. Image reconstruite depuis les sources locales et publiée sur DockerHub :
+
+```bash
+cd _events_producers/
+docker build --network=host -t blackphoenix2020/event_hub_producers:latest .
+docker push blackphoenix2020/event_hub_producers:latest
+# Puis : terraform apply -target=module.container_producers
+```
+
+**Statut :** [x] P1 corrigé / [x] P2 déployé / [x] P3 image reconstruite (2026-03-11)
 
 ---
 
@@ -455,8 +466,8 @@ Ressources créées dans `rg-e6-sbuasa` (francecentral) :
 
 | # | Fichier | Statut | Critère |
 |---|---------|--------|---------|
-| P1 | Corrections chemins Terraform + subscription_id | [ ] | Prérequis infra |
-| P2 | `terraform apply` — plateforme déployée | [ ] | Prérequis infra |
+| P1 | Corrections chemins Terraform + subscription_id | [x] | Prérequis infra |
+| P2 | `terraform apply` — plateforme déployée | [x] | Prérequis infra |
 | 1 | `security/rgpd/registre_traitements.md` | [ ] | RGPD registre |
 | 2 | `security/rbac/rbac_mapping.md` | [ ] | RBAC accès |
 | 3 | `security/rgpd/procedures_conformite.md` | [ ] | RGPD procédures |

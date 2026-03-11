@@ -32,7 +32,33 @@ Dans `terraform/terraform.tfvars`, s'assurer que `subscription_id` correspond à
 subscription_id = "51a5ea3c-2ada-4f97-b2a1-a26eda3b14f2"
 ```
 
-### 3. Corriger les chemins dans 1_main.tf
+### 3. Image Docker des producers
+
+L'image `sengsathit/event_hub_producers:latest` référencée dans le code source du prof est privée/supprimée et inaccessible. L'image a été reconstruite depuis les sources locales (`_events_producers/`) et publiée sur le compte DockerHub du candidat.
+
+```bash
+cd _events_producers/
+
+# Build avec --network=host pour que pip accède à PyPI
+docker build --network=host -t blackphoenix2020/event_hub_producers:latest .
+
+# Push
+docker push blackphoenix2020/event_hub_producers:latest
+```
+
+Mettre à jour `terraform/terraform.tfvars` :
+
+```hcl
+container_producers_image = "blackphoenix2020/event_hub_producers:latest"
+dockerhub_username        = "blackphoenix2020"
+dockerhub_token           = "<token_dockerhub>"
+```
+
+> **Note :** Le Dockerfile utilise `--network=host` en raison d'une restriction DNS de l'environnement de build. L'image est publique sur DockerHub : `blackphoenix2020/event_hub_producers:latest`.
+
+---
+
+### 4. Corriger les chemins dans 1_main.tf
 
 Le fichier `terraform/1_main.tf` référence les modules avec `./modules/` alors qu'ils se trouvent à la racine du projet (`../modules/` relatif au dossier `terraform/`). Corrections à appliquer :
 
@@ -72,6 +98,13 @@ L'ordre de création est géré par les `depends_on` définis dans `1_main.tf` :
 3. SQL Server + base `dwh-shopnow` + container db-setup (exécution de `dwh_schema.sql`)
 4. Stream Analytics job + inputs/outputs + démarrage automatique
 5. Container producers (ACI)
+
+## Historique des déploiements
+
+| Date | Action | Subscription | Résultat |
+|------|--------|-------------|---------|
+| 2026-03-11 | `terraform apply` initial | `51a5ea3c` (perso) | 20/21 ressources créées (ACI producers KO — image inaccessible) |
+| 2026-03-11 | Build image + `terraform apply -target=module.container_producers` | `51a5ea3c` (perso) | Image reconstruite depuis sources, 21/21 ressources déployées |
 
 ## Destruction
 
