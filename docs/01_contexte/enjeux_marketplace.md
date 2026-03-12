@@ -1,27 +1,51 @@
-# 2. Enjeux d’une Data Marketplace Moderne
+# Enjeux du pivot Marketplace
 
-Une Data Marketplace n’est pas un simple Data Lake. C’est un **écosystème complet** permettant :
+## Pourquoi le modèle Marketplace change tout
 
-## 2.1. Découverte et catalogage
-- Indexation automatique des jeux de données.
-- Recherche par mots-clés, domaines, tags.
-- Métadonnées enrichies (qualité, fraîcheur, propriétaires).
+Un modèle Marketplace multi-vendeurs introduit des contraintes DWH fondamentalement différentes d'un modèle mono-vendeur :
 
-## 2.2. Sécurité et cloisonnement
-- RLS/CLS pour chaque vendeur.
-- Gestion fine des identités et accès.
-- Journalisation complète.
+## 1. Traçabilité contractuelle
 
-## 2.3. Supervision & MCO
-- Logs unifiés.
-- Alerting SLA/SLI/SLO.
-- Vision pipeline par pipeline.
+Chaque vendeur négocie des **taux de commission** qui évoluent dans le temps. Un écrasement (SCD1) efface l'historique — illégal dans un contexte contractuel.
 
-## 2.4. Standardisation
-- Pipelines d’ingestion normalisés.
-- Modèles ETL reproductibles.
-- Patrons de déploiement Terraform.
+→ **Solution : SCD Type 2** (`dim_vendor` avec `valid_from`, `valid_to`, `is_current`)
 
-## 2.5. Traçabilité
-- SCD2 pour l’historisation progressive.
-- Linéage complet via Purview ou équivalent.
+## 2. Cloisonnement des données
+
+Un vendeur ne doit voir **que ses propres données** (stocks, commandes, commissions).
+
+→ **Solution : RBAC Azure SQL** — vues filtrées par `vendor_id`, rôle SQL dédié vendeur
+
+## 3. Qualité et disponibilité des stocks
+
+Les stocks vendeurs sont mis à jour **toutes les heures** — pas en temps réel. Un modèle insert-only horodaté garantit l'auditabilité.
+
+→ **Solution : `fact_vendor_stock`** — INSERT-only avec `stock_timestamp`
+
+## 4. Supervision hybride
+
+Le DWH combine désormais :
+- Flux **temps réel** (orders/clickstream via Stream Analytics)
+- Flux **batch** (vendeurs/stocks via procédures stockées)
+
+→ **Solution : monitoring DMV Azure SQL** + alertes Azure Monitor sur les deux flux
+
+## 5. Conformité RGPD étendue
+
+3 traitements distincts à déclarer (art. 30 RGPD) :
+
+| Traitement | Base légale | Durée |
+|------------|-------------|-------|
+| Commandes clients | Contrat art. 6.1.b | 10 ans |
+| Clickstream | Intérêt légitime art. 6.1.f | 13 mois (CNIL) |
+| Vendeurs tiers | Contrat art. 6.1.b | Contrat + 5 ans |
+
+## 6. Dimensionnement et évolutivité
+
+L'implémentation actuelle (Azure SQL S0, 10 DTU) est calibrée pour le **MVP Marketplace** :
+
+| Seuil | Valeur S0 | Trigger migration |
+|-------|-----------|-------------------|
+| DTU | 10 | >80% sustained → passer S2 |
+| Stockage | 2 GB | >1.5 GB → passer S1 |
+| Vendeurs | <100 actifs | >500 → évaluer Elastic Pool |

@@ -1,28 +1,60 @@
-# 4. Diagnostic de l’architecture existante
+# Diagnostic de l'architecture existante
 
-La plateforme existante présente plusieurs limites structurelles.
+## Architecture avant C16/C17
 
-## 4.1. Ingestion
-- Pipelines non standardisés.
-- Absence de gestion des erreurs.
-- Pas de mécanisme d'historisation.
-- Dépendances manuelles entre jobs.
+```
+Python producers (ACI)
+  → Event Hubs (orders / products / clickstream)
+  → Stream Analytics (job continu, 1 SU)
+  → Azure SQL S0 dwh-shopnow
+       ├─ dim_customer   (PII : name, email, address)
+       ├─ dim_product    (product_id VARCHAR(50), name, category)
+       ├─ fact_order     (order_id, product_id, customer_id, quantity, unit_price)
+       └─ fact_clickstream (event_id, session_id, user_id, url, event_type)
+```
 
-## 4.2. Stockage
-- Organisation en silos.
-- Pas de zone Raw/Curated/Serve.
-- Pas de versioning des données.
+## Analyse par domaine
 
-## 4.3. Sécurité
-- Droits attribués individuellement au lieu de rôles.
-- Pas de séparation vendeur/client.
-- Audit logs partiels.
+### Ingestion
 
-## 4.4. Supervision
-- Monitoring insuffisant.
-- Impossible d'observer un SLA de bout en bout.
-- Logs dispersés dans plusieurs comptes/ressources.
+| Constat | Impact |
+|---------|--------|
+| 3 flux Event Hub actifs (orders/clickstream/products) | ✓ Opérationnel |
+| Pas de gestion d'erreur sur Stream Analytics | Risque : pipeline silencieux |
+| Pas de mécanisme batch pour les vendeurs | Manquant pour C17 |
+| `unit_price` NULL sur 3004 lignes `fact_order` | Mapping ASA incomplet détecté |
 
-## 4.5. Gouvernance
-- Métadonnées limitées.
-- Absence de catalogage centralisé.
+### Stockage
+
+| Constat | Impact |
+|---------|--------|
+| Azure SQL S0 — 10 DTU, 2 GB | Suffisant pour MVP |
+| Pas de dimension vendeur | À créer (C17) |
+| `product_id` en UUID VARCHAR(50) | Attention FK type mismatch |
+| Pas de zones Raw/Curated/Serve | Non requis sur Azure SQL |
+
+### Sécurité
+
+| Constat | Impact |
+|---------|--------|
+| Firewall `0.0.0.0–255.255.255.255` | Risque — toutes IPs autorisées |
+| Pas de RBAC documenté | À créer (C16) |
+| Pas de registre RGPD | À créer (C16) |
+| sqladmin = seul compte | Pas de comptes nominatifs |
+
+### Supervision
+
+| Constat | Impact |
+|---------|--------|
+| Pas de monitoring DMV configuré | Risque incident non détecté |
+| Pas d'alertes Azure Monitor | Aucune notification en cas de panne |
+| Pas de SLA défini | Impossible de mesurer la disponibilité |
+| Pas de backup planifié | Risque de perte de données |
+
+### Maintenance
+
+| Constat | Impact |
+|---------|--------|
+| Pas de script d'intégrité | Anomalies non détectées (unit_price NULL) |
+| Pas de maintenance d'index | Fragmentation 99.9% sur fact_clickstream |
+| Pas de schedule de backup | PITR Azure SQL actif mais non documenté |
