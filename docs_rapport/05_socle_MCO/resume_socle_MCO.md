@@ -55,6 +55,11 @@
 
 ### `backup_ltr_config.sh` — Politique LTR
 
+**Commande :**
+```bash
+bash sql/backups/backup_ltr_config.sh
+```
+
 Exécuté contre `sql-server-rg-e6-sbuasa` / `dwh-shopnow` :
 
 ```
@@ -68,6 +73,11 @@ Résultat : **OK** — politique appliquée et vérifiée via `az sql db ltr-pol
 ---
 
 ### `backup_full.sh` — Export BACPAC
+
+**Commande :**
+```bash
+SQL_ADMIN_PASSWORD='P@ssw0rd!2024' bash sql/backups/backup_full.sh
+```
 
 Export BACPAC complet exécuté avec auto-création du storage account :
 
@@ -83,6 +93,15 @@ Résultat : **OK** — fichier vérifié via `az storage blob list`.
 ---
 
 ### `check_integrity.sql` — Contrôle d'intégrité
+
+**Commande :**
+```bash
+sqlcmd -S sql-server-rg-e6-sbuasa.database.windows.net \
+  -U sqladmin -P 'P@ssw0rd!2024' \
+  -d dwh-shopnow \
+  -i sql/maintenance/check_integrity.sql \
+  -C
+```
 
 Exécuté sur `dwh-shopnow` le 2026-03-12 à 11h02 UTC :
 
@@ -107,3 +126,36 @@ Exécuté sur `dwh-shopnow` le 2026-03-12 à 11h02 UTC :
 | `dim_customer` | 100 | 0,32 MB |
 
 **Anomalie identifiée :** `unit_price` NULL sur la totalité des lignes `fact_order` (3 004/3 004). Cause probable : mapping Stream Analytics incomplet sur le champ `unit_price` en provenance de l'Event Hub `orders`. Le script de contrôle a correctement détecté et signalé cette anomalie — démonstration de l'efficacité du dispositif de supervision C16.
+
+---
+
+### `index_maintenance.sql` — Maintenance des index
+
+**Commande :**
+```bash
+sqlcmd -S sql-server-rg-e6-sbuasa.database.windows.net \
+  -U sqladmin -P 'P@ssw0rd!2024' \
+  -d dwh-shopnow \
+  -i sql/maintenance/index_maintenance.sql \
+  -C
+```
+
+Exécuté sur `dwh-shopnow` le 2026-03-12 à 11h21 UTC :
+
+**Fragmentation détectée avant maintenance :**
+
+| Table | Index | Fragmentation | Pages | Action |
+|-------|-------|--------------|-------|--------|
+| `fact_clickstream` | `PK__fact_cli__...` | **99,9%** | 1 070 | ALERTE — REBUILD requis |
+
+**Actions exécutées :**
+- REBUILD `PK__fact_cli__2370F727105BBD27` ON `fact_clickstream` WITH (ONLINE = ON)
+- UPDATE STATISTICS sur les 4 tables DWH
+
+**Fragmentation après maintenance :**
+
+| Table | Index | Fragmentation | Pages |
+|-------|-------|--------------|-------|
+| `fact_clickstream` | `PK__fact_cli__...` | **0,28%** | 721 |
+
+Résultat : **OK** — fragmentation réduite de 99,9% → 0,28%. Gain de 349 pages (compression effective). Maintenance ONLINE non bloquante confirmée sur Azure SQL S0.
