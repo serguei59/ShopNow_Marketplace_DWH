@@ -58,18 +58,3 @@ markdown_extensions:
 
 plugins:
   - search
-  - pdf-export:
-      enabled: true
-      media_type: print
-      verbose: false
-      combined: true
-      toc_level: 2
-      cover: docs_rapport/00_couverture/cover.png # optionnel
-      header_template: docs_rapport/00_couverture/header.html
-      footer_template: docs_rapport/00_couverture/footer.html
-      page_size: A4
-      landscape: false
-      margin_top: 25mm
-      margin_bottom: 20mm
-      margin_left: 20mm
-      margin_right: 20mm
