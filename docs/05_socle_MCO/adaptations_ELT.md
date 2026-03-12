@@ -1,8 +1,6 @@
-# ETL SCD2
+# Adaptations ETL — SCD2
 
-Pipeline ADF :
+> **Document complet :** [`docs/06_SCD2/adaptations_ETL.md`](../06_SCD2/adaptations_ETL.md)
 
-- lookup version existante
-- comparer
-- insérer nouvelle ligne
-- fermer ancienne version
+Ce fichier est un alias — voir le dossier `06_SCD2/` pour la documentation
+complète incluant les flux, la logique MERGE et la séquence de déploiement C17.
