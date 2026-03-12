@@ -37,5 +37,5 @@ modules/             ← modules réutilisables (racine du projet)
 
 ### container_producers
 - ACI `aeh-producers`, restart_policy Always, pas d'IP publique
-- Image : `sengsathit/event_hub_producers:latest`
+- Image : `blackphoenix2020/event_hub_producers:latest` (reconstruite depuis `_events_producers/` — image prof inaccessible)
 - Variables d'environnement : `EVENTHUB_CONNECTION_STR`, intervalles orders/products/clickstream

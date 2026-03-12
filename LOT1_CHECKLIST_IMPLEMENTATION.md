@@ -64,7 +64,18 @@ Ressources créées dans `rg-e6-sbuasa` (francecentral) :
 - Stream Analytics job `asa-shopnow` (démarré automatiquement)
 - ACI `aeh-producers` (producteurs Python actifs)
 
-**Statut :** [ ] P1 corrigé / [ ] P2 déployé
+### P3 — Reconstruire l'image Docker des producers
+
+L'image `sengsathit/event_hub_producers:latest` (prof) est privée/supprimée. Image reconstruite depuis les sources locales et publiée sur DockerHub :
+
+```bash
+cd _events_producers/
+docker build --network=host -t blackphoenix2020/event_hub_producers:latest .
+docker push blackphoenix2020/event_hub_producers:latest
+# Puis : terraform apply -target=module.container_producers
+```
+
+**Statut :** [x] P1 corrigé / [x] P2 déployé / [x] P3 image reconstruite (2026-03-11)
 
 ---
 
@@ -107,7 +118,7 @@ Ressources créées dans `rg-e6-sbuasa` (francecentral) :
 ---
 
 #### Étape 1 — `security/rgpd/registre_traitements.md`
-- **Statut :** [ ] À faire
+- **Statut :** [x] Fait — 2026-03-11
 - **Critère C16 :** Registre des traitements de données personnelles (art. 30 RGPD)
 - **Contenu :**
   - Traitement 1 : Commandes clients — `dim_customer` + `fact_order` — base légale contrat — 10 ans
@@ -120,7 +131,7 @@ Ressources créées dans `rg-e6-sbuasa` (francecentral) :
 ---
 
 #### Étape 2 — `security/rbac/rbac_mapping.md`
-- **Statut :** [ ] À faire
+- **Statut :** [x] Fait — 2026-03-11
 - **Critère C16 :** Nouveaux accès configurés conformément au besoin
 - **Contenu :**
   - Matrice 5 rôles × (Azure RBAC role, SQL permission, périmètre données, MFA requis)
@@ -134,7 +145,7 @@ Ressources créées dans `rg-e6-sbuasa` (francecentral) :
 ---
 
 #### Étape 3 — `security/rgpd/procedures_conformite.md`
-- **Statut :** [ ] À faire
+- **Statut :** [x] Fait — 2026-03-11 (fichier : `procédures conformite.md`)
 - **Critère C16 :** Procédures de tri des données personnelles + traitements de conformité avec fréquence
 - **Contenu :**
   - Procédure anonymisation `fact_clickstream` (purge J+13 mois)
@@ -148,7 +159,7 @@ Ressources créées dans `rg-e6-sbuasa` (francecentral) :
 ---
 
 #### Étape 4 — `security/README.md`
-- **Statut :** [ ] À faire
+- **Statut :** [x] Fait — 2026-03-11
 - **Critère C16 :** Documentation structurée
 - **Contenu :** Index du dossier security/, références aux fichiers, contexte légal (RGPD art. 30, CNIL)
 - **Justification jury :** Point d'entrée du dossier sécurité pour le jury. Signal de rigueur organisationnelle.
@@ -161,7 +172,7 @@ Ressources créées dans `rg-e6-sbuasa` (francecentral) :
 ---
 
 #### Étape 5 — `monitoring/queries/log_errors_last24h.sql`
-- **Statut :** [ ] À faire
+- **Statut :** [x] Fait — 2026-03-11
 - **Critère C16 :** Journalisation catégorisée alertes et erreurs
 - **Contenu (4 requêtes) :**
   - `sys.event_log` — connexions échouées, deadlocks, throttling (24h)
@@ -174,7 +185,7 @@ Ressources créées dans `rg-e6-sbuasa` (francecentral) :
 ---
 
 #### Étape 6 — `monitoring/queries/data_freshness.sql`
-- **Statut :** [ ] À faire
+- **Statut :** [x] Fait — 2026-03-11
 - **Critère C16 :** Alertes ingestion ratée, supervision pipeline
 - **Contenu (4 requêtes) :**
   - Vue consolidée fraîcheur par table (FRAIS / ATTENTION / STALE)
@@ -187,7 +198,7 @@ Ressources créées dans `rg-e6-sbuasa` (francecentral) :
 ---
 
 #### Étape 7 — `monitoring/queries/sla_availability.sql`
-- **Statut :** [ ] À faire
+- **Statut :** [x] Fait — 2026-03-11
 - **Critère C16 :** Indicateurs de service basés sur SLA
 - **Contenu (3 requêtes) :**
   - Taux disponibilité par jour sur 30 jours (connexions ok/total depuis `sys.event_log`) + statut SLA OK/KO
@@ -203,7 +214,7 @@ Ressources créées dans `rg-e6-sbuasa` (francecentral) :
 ---
 
 #### Étape 8 — `monitoring/queries/pipeline_latency.sql`
-- **Statut :** [ ] À faire
+- **Statut :** [x] Fait — 2026-03-11
 - **Critère C16 :** Indicateurs de service, performance pipeline
 - **Contenu (3 requêtes) :**
   - Intervalle moyen entre insertions `fact_order` avec `LAG()` (latence min/max/écart-type sur 500 lignes)
@@ -219,7 +230,7 @@ Ressources créées dans `rg-e6-sbuasa` (francecentral) :
 ---
 
 #### Étape 9 — `monitoring/dashboards/dashboard_sla_spec.md`
-- **Statut :** [ ] À faire
+- **Statut :** [x] Fait — 2026-03-11
 - **Critère C16 :** Tableau de bord permettant de rendre compte de l'ensemble des indicateurs de service
 - **Contenu :**
   - 6 tiles Power BI : disponibilité %, latence fact_order, latence clickstream, taux erreurs connexion, volume journalier, statut SLA global
@@ -233,7 +244,7 @@ Ressources créées dans `rg-e6-sbuasa` (francecentral) :
 ---
 
 #### Étape 10 — `monitoring/dashboards/alert_rules_spec.md`
-- **Statut :** [ ] À faire
+- **Statut :** [x] Fait — 2026-03-11
 - **Critère C16 :** Système d'alerte mis en place et activé en cas d'erreur notifiée dans les journaux
 - **Contenu :**
   - 6 règles Azure Monitor Alert avec : nom, condition, seuil, fenêtre, fréquence évaluation, sévérité, destinataire, action
@@ -246,7 +257,7 @@ Ressources créées dans `rg-e6-sbuasa` (francecentral) :
 ---
 
 #### Étape 11 — `monitoring/README.md`
-- **Statut :** [ ] À faire
+- **Statut :** [x] Fait — 2026-03-11
 - **Critère C16 :** Documentation structurée par cas d'usage
 - **Contenu :** Index du dossier, description des 6 requêtes et 2 spécifications, contexte technique Azure SQL, ressources de référence
 - **Dépendances :** Étapes 5 à 10
@@ -258,7 +269,7 @@ Ressources créées dans `rg-e6-sbuasa` (francecentral) :
 ---
 
 #### Étape 12 — `sql/backups/backup_schedule.md`
-- **Statut :** [ ] À faire
+- **Statut :** [x] Fait — 2026-03-12
 - **Critère C16 :** Tâches planifiées de backup programmées et configurées
 - **Contenu :**
   - Tableau planning : Full BACPAC hebdo (dimanche 02h00), LTR mensuel (1er du mois), LTR annuel (1er janvier)
@@ -273,7 +284,7 @@ Ressources créées dans `rg-e6-sbuasa` (francecentral) :
 ---
 
 #### Étape 13 — `sql/backups/backup_full.sh`
-- **Statut :** [ ] À faire
+- **Statut :** [x] Fait — 2026-03-12
 - **Critère C16 :** Backup complet planifié et configuré, résultats attendus produits
 - **Contenu :** Script Azure CLI — `az sql db export` vers Azure Blob Storage (BACPAC), avec variables d'environnement pour les credentials, log de résultat, notification email en cas d'échec
 - **Note technique :** Azure SQL Database (non Managed Instance) ne supporte pas `BACKUP DATABASE TO DISK`. Le BACPAC via `az sql db export` est l'équivalent du backup complet portable.
@@ -283,7 +294,7 @@ Ressources créées dans `rg-e6-sbuasa` (francecentral) :
 ---
 
 #### Étape 14 — `sql/backups/backup_ltr_config.sh`
-- **Statut :** [ ] À faire
+- **Statut :** [x] Fait — 2026-03-12
 - **Critère C16 :** Backup partiel planifié et configuré
 - **Contenu :** Script Azure CLI — `az sql db ltr-policy set` pour configurer Long-Term Retention (4 semaines, 12 mois, 5 ans) + `az sql db ltr-backup list` pour vérifier les backups existants
 - **Justification jury :** Le LTR est la réponse Azure SQL au backup différentiel/partiel. Utiliser la solution native prouve la maîtrise de la plateforme.
@@ -292,7 +303,7 @@ Ressources créées dans `rg-e6-sbuasa` (francecentral) :
 ---
 
 #### Étape 15 — `sql/backups/restore_procedure.sh`
-- **Statut :** [ ] À faire
+- **Statut :** [x] Fait — 2026-03-12
 - **Critère C16 :** Les tâches planifiées produisent les résultats attendus (inclut la restauration)
 - **Contenu :** Deux cas de restauration :
   - PITR (Point-In-Time Restore) — `az sql db restore` — pour corruption ou suppression récente (≤ 35j)
@@ -307,7 +318,7 @@ Ressources créées dans `rg-e6-sbuasa` (francecentral) :
 ---
 
 #### Étape 16 — `sql/maintenance/check_integrity.sql`
-- **Statut :** [ ] À faire
+- **Statut :** [x] Fait — 2026-03-12
 - **Critère C16 :** Tâches de maintenance priorisées selon objectifs
 - **Contenu :**
   - Vérification intégrité logique : comptages, orphelins (fact_order sans dim_customer), valeurs nulles critiques
@@ -320,7 +331,7 @@ Ressources créées dans `rg-e6-sbuasa` (francecentral) :
 ---
 
 #### Étape 17 — `sql/maintenance/index_maintenance.sql`
-- **Statut :** [ ] À faire
+- **Statut :** [x] Fait — 2026-03-12
 - **Critère C16 :** Tâches de maintenance — performance
 - **Contenu :**
   - Analyse fragmentation : `sys.dm_db_index_physical_stats` — seuils 10% (REORGANIZE) / 30% (REBUILD)
@@ -332,7 +343,7 @@ Ressources créées dans `rg-e6-sbuasa` (francecentral) :
 ---
 
 #### Étape 18 — `sql/README.md`
-- **Statut :** [ ] À faire
+- **Statut :** [x] Fait — 2026-03-12
 - **Critère C16 :** Documentation structurée
 - **Contenu :** Index du dossier sql/, planning de maintenance, références scripts, note sur les spécificités Azure SQL
 - **Dépendances :** Étapes 12 à 17
@@ -344,7 +355,7 @@ Ressources créées dans `rg-e6-sbuasa` (francecentral) :
 ---
 
 #### Étape 19 — `docs/05_socle_MCO/supervision_logging.md`
-- **Statut :** [ ] À faire (remplace stub 5 lignes)
+- **Statut :** [x] Fait — 2026-03-11
 - **Critère C16 :** Journalisation, documentation cas d'usage
 - **Contenu :**
   - Architecture de logs : Azure SQL Event Log → DMV → Azure Monitor → Log Analytics
@@ -358,7 +369,7 @@ Ressources créées dans `rg-e6-sbuasa` (francecentral) :
 ---
 
 #### Étape 20 — `docs/05_socle_MCO/alerting_SLA.md`
-- **Statut :** [ ] À faire (remplace stub 5 lignes)
+- **Statut :** [x] Fait — 2026-03-11
 - **Critère C16 :** SLA, système d'alerte, tableau de bord
 - **Contenu :**
   - Tableau SLA formel : indicateur / cible / seuil alerte / seuil critique / fréquence mesure / responsable
@@ -371,7 +382,7 @@ Ressources créées dans `rg-e6-sbuasa` (francecentral) :
 ---
 
 #### Étape 21 — `docs/05_socle_MCO/backups_et_DRP.md`
-- **Statut :** [ ] À faire (remplace stub 5 lignes)
+- **Statut :** [x] Fait — 2026-03-12
 - **Critère C16 :** Backups, documentation cas d'usage
 - **Contenu :**
   - Architecture backup : PITR natif + BACPAC hebdo + LTR long terme
@@ -384,7 +395,7 @@ Ressources créées dans `rg-e6-sbuasa` (francecentral) :
 ---
 
 #### Étape 22 — `docs/05_socle_MCO/processus_MCO.md`
-- **Statut :** [ ] À faire (remplace stub 10 lignes)
+- **Statut :** [x] Fait — 2026-03-12
 - **Critère C16 :** Tâches priorisées, tâches assignées (RACI)
 - **Contenu :**
   - Matrice priorisation P1/P2/P3 : délais de prise en charge, délais résolution, escalade
@@ -399,7 +410,7 @@ Ressources créées dans `rg-e6-sbuasa` (francecentral) :
 ---
 
 #### Étape 23 — `docs/07_securite/gestion_identites.md`
-- **Statut :** [ ] À faire (remplace stub 3 lignes)
+- **Statut :** [x] Fait — 2026-03-11
 - **Critère C16 :** Accès configurés, documentation, RGPD
 - **Contenu :**
   - Architecture Azure AD : groupes par rôle, MFA obligatoire pour Admin et Data Engineer
@@ -413,7 +424,7 @@ Ressources créées dans `rg-e6-sbuasa` (francecentral) :
 ---
 
 #### Étape 24 — `docs/07_securite/roles_permissions.md`
-- **Statut :** [ ] À faire (remplace stub 10 lignes)
+- **Statut :** [x] Fait — 2026-03-11
 - **Critère C16 :** Accès configurés conformément au besoin, documentation
 - **Contenu :**
   - Matrice complète 5 rôles × permissions (transcription narrative du RBAC mapping)
@@ -430,7 +441,7 @@ Ressources créées dans `rg-e6-sbuasa` (francecentral) :
 ---
 
 #### Étape 25 — `docs_rapport/05_socle_MCO/resume_socle_MCO.md`
-- **Statut :** [ ] À faire (mise à jour avec ✅ et références)
+- **Statut :** [x] Fait — 2026-03-12
 - **Critère C16 :** Couverture complète dans le livrable certifiant
 - **Contenu :**
   - Tableau des 14 critères C16 avec statut [x] et pointeur vers l'artefact
@@ -441,7 +452,7 @@ Ressources créées dans `rg-e6-sbuasa` (francecentral) :
 ---
 
 #### Étape 26 — `docs_rapport/07_securite/resume_securite.md`
-- **Statut :** [ ] À faire (mise à jour avec références RGPD)
+- **Statut :** [x] Fait — 2026-03-11
 - **Critère C16 :** RGPD dans le livrable certifiant
 - **Contenu :**
   - Résumé RBAC avec lien vers matrice
@@ -455,34 +466,34 @@ Ressources créées dans `rg-e6-sbuasa` (francecentral) :
 
 | # | Fichier | Statut | Critère |
 |---|---------|--------|---------|
-| P1 | Corrections chemins Terraform + subscription_id | [ ] | Prérequis infra |
-| P2 | `terraform apply` — plateforme déployée | [ ] | Prérequis infra |
-| 1 | `security/rgpd/registre_traitements.md` | [ ] | RGPD registre |
-| 2 | `security/rbac/rbac_mapping.md` | [ ] | RBAC accès |
-| 3 | `security/rgpd/procedures_conformite.md` | [ ] | RGPD procédures |
-| 4 | `security/README.md` | [ ] | — |
-| 5 | `monitoring/queries/log_errors_last24h.sql` | [ ] | Journalisation |
-| 6 | `monitoring/queries/data_freshness.sql` | [ ] | Alertes ingestion |
-| 7 | `monitoring/queries/sla_availability.sql` | [ ] | SLA |
-| 8 | `monitoring/queries/pipeline_latency.sql` | [ ] | Latence |
-| 9 | `monitoring/dashboards/dashboard_sla_spec.md` | [ ] | Dashboard |
-| 10 | `monitoring/dashboards/alert_rules_spec.md` | [ ] | Alerting |
-| 11 | `monitoring/README.md` | [ ] | — |
-| 12 | `sql/backups/backup_schedule.md` | [ ] | Planning backup |
-| 13 | `sql/backups/backup_full.sh` | [ ] | Backup complet |
-| 14 | `sql/backups/backup_ltr_config.sh` | [ ] | Backup partiel |
-| 15 | `sql/backups/restore_procedure.sh` | [ ] | Restauration |
-| 16 | `sql/maintenance/check_integrity.sql` | [ ] | Intégrité |
-| 17 | `sql/maintenance/index_maintenance.sql` | [ ] | Index |
-| 18 | `sql/README.md` | [ ] | — |
-| 19 | `docs/05_socle_MCO/supervision_logging.md` | [ ] | Journalisation |
-| 20 | `docs/05_socle_MCO/alerting_SLA.md` | [ ] | SLA alertes |
-| 21 | `docs/05_socle_MCO/backups_et_DRP.md` | [ ] | Backup |
-| 22 | `docs/05_socle_MCO/processus_MCO.md` | [ ] | RACI / P1P2P3 |
-| 23 | `docs/07_securite/gestion_identites.md` | [ ] | Accès RGPD |
-| 24 | `docs/07_securite/roles_permissions.md` | [ ] | RBAC |
-| 25 | `docs_rapport/05_socle_MCO/resume_socle_MCO.md` | [ ] | C16 synthèse |
-| 26 | `docs_rapport/07_securite/resume_securite.md` | [ ] | RGPD synthèse |
+| P1 | Corrections chemins Terraform + subscription_id | [x] | Prérequis infra |
+| P2 | `terraform apply` — plateforme déployée | [x] | Prérequis infra |
+| 1 | `security/rgpd/registre_traitements.md` | [x] | RGPD registre |
+| 2 | `security/rbac/rbac_mapping.md` | [x] | RBAC accès |
+| 3 | `security/rgpd/procedures_conformite.md` | [x] | RGPD procédures |
+| 4 | `security/README.md` | [x] | — |
+| 5 | `monitoring/queries/log_errors_last24h.sql` | [x] | Journalisation |
+| 6 | `monitoring/queries/data_freshness.sql` | [x] | Alertes ingestion |
+| 7 | `monitoring/queries/sla_availability.sql` | [x] | SLA |
+| 8 | `monitoring/queries/pipeline_latency.sql` | [x] | Latence |
+| 9 | `monitoring/dashboards/dashboard_sla_spec.md` | [x] | Dashboard |
+| 10 | `monitoring/dashboards/alert_rules_spec.md` | [x] | Alerting |
+| 11 | `monitoring/README.md` | [x] | — |
+| 12 | `sql/backups/backup_schedule.md` | [x] | Planning backup |
+| 13 | `sql/backups/backup_full.sh` | [x] | Backup complet |
+| 14 | `sql/backups/backup_ltr_config.sh` | [x] | Backup partiel |
+| 15 | `sql/backups/restore_procedure.sh` | [x] | Restauration |
+| 16 | `sql/maintenance/check_integrity.sql` | [x] | Intégrité |
+| 17 | `sql/maintenance/index_maintenance.sql` | [x] | Index |
+| 18 | `sql/README.md` | [x] | — |
+| 19 | `docs/05_socle_MCO/supervision_logging.md` | [x] | Journalisation |
+| 20 | `docs/05_socle_MCO/alerting_SLA.md` | [x] | SLA alertes |
+| 21 | `docs/05_socle_MCO/backups_et_DRP.md` | [x] | Backup |
+| 22 | `docs/05_socle_MCO/processus_MCO.md` | [x] | RACI / P1P2P3 |
+| 23 | `docs/07_securite/gestion_identites.md` | [x] | Accès RGPD |
+| 24 | `docs/07_securite/roles_permissions.md` | [x] | RBAC |
+| 25 | `docs_rapport/05_socle_MCO/resume_socle_MCO.md` | [x] | C16 synthèse |
+| 26 | `docs_rapport/07_securite/resume_securite.md` | [x] | RGPD synthèse |
 
 ---
 
