@@ -13,7 +13,7 @@ nav:
   - 2. Diagnostic:
       - "Architecture existante": 02_diagnostic/analyse_architecture_existante.md
       - "Limites et risques": 02_diagnostic/limites_et_risques.md
-      - "Impacts Marketplace": 02_diagnostic/impacts_marketplace.md
+      - "Impacts Marketplace": 02_diagnostic/impact_marketplace.md
   - 3. Situations professionnelles:
       - "Vue générale": 03_situations/situations_overview.md
       - "Situations MCO (C16)": 03_situations/situations_MCO.md
@@ -29,12 +29,12 @@ nav:
       - "Alerting & SLA": 05_socle_MCO/alerting_SLA.md
       - "Qualité des données": 05_socle_MCO/qualite_donnees.md
       - "Processus MCO": 05_socle_MCO/processus_MCO.md
-      - "Sécurité & RLS": 05_socle_MCO/controle_acces_RLS.md
+      - "Sécurité & RLS": 05_socle_MCO/controle_acces_rls.md
       - "Backups & DRP": 05_socle_MCO/backups_et_DRP.md
   - 6. Adaptations SCD2 (C17):
       - "Modélisation SCD2": 06_SCD2/modelisation_SCD2.md
       - "Adaptations ETL": 06_SCD2/adaptations_ETL.md
-      - "Schéma DWH": 06_SCD2/schema_dwh.md
+      - "Schéma DWH enrichi": 06_SCD2/schema_dwh_enrichi.md
   - 7. Sécurité:
       - "Identités": 07_securite/gestion_identites.md
       - "Rôles & permissions": 07_securite/roles_permissions.md
@@ -45,15 +45,15 @@ nav:
       - "Automatisation des backups": 08_DRP/automatisation_backups.md
   - 9. Infrastructure Terraform:
       - "Structure des modules": 09_terraform/structure_modules.md
-      - "Variables & outputs": 09_terraform/variables_outputs.md
+      - "Variables & outputs": 09_terraform/variable_output.md
       - "Plan de déploiement": 09_terraform/plan_deploiement.md
   - 10. Pipelines:
       - "Pipelines Data Factory": 10_pipelines/datafactory_pipelines.md
       - "Jobs Stream Analytics": 10_pipelines/streamanalytics_jobs.md
       - "Ingestion Event Hubs": 10_pipelines/eventhubs_ingestion.md
   - 11. Power BI:
-      - "Dashboards SLA": 11_powerbi/dashboards_SLA.md
-      - "Rapports vendeurs": 11_powerbi/dashboards_vendeurs.md
+      - "Dashboards SLA": 11_powerbi/dashboard_SLA.md
+      - "Rapports vendeurs": 11_powerbi/dashboard_vendeurs.md
       - "Configuration RLS": 11_powerbi/RLS_configuration.md
   - 12. Validation E6:
       - "Grille C16/C17": 12_validation_E6/grille_C16_C17.md
