@@ -54,3 +54,34 @@ FROM sys.dm_exec_requests WHERE blocking_session_id > 0;
 | Toutes les 5 min | `data_freshness.sql` | Pipeline silencieux > 10 min |
 | Mensuelle | `sla_availability.sql` | Disponibilité < 99,9% |
 | Hebdomadaire | `check_integrity.sql` | Score cohérence < 75 |
+
+## Commandes opérationnelles
+
+```bash
+# Contrôle intégrité
+sqlcmd -S sql-server-rg-e6-sbuasa.database.windows.net \
+  -U sqladmin -P 'P@ssw0rd!2024' \
+  -d dwh-shopnow -i sql/maintenance/check_integrity.sql -C
+
+# Maintenance index
+sqlcmd -S sql-server-rg-e6-sbuasa.database.windows.net \
+  -U sqladmin -P 'P@ssw0rd!2024' \
+  -d dwh-shopnow -i sql/maintenance/index_maintenance.sql -C
+
+# Backup BACPAC
+SQL_ADMIN_PASSWORD='P@ssw0rd!2024' bash sql/backups/backup_full.sh
+
+# Vérifier les backups disponibles
+az storage blob list \
+  --account-name stshopnowbackup \
+  --container-name sql-backups \
+  --output table --auth-mode key
+```
+
+## Niveaux d'escalade
+
+| Niveau | Délai | Responsable | Action |
+|--------|-------|-------------|--------|
+| L1 | 0–30 min | DBA | Diagnostic dashboard + alertes Azure Monitor |
+| L2 | 30–60 min | Data Engineer | Analyse pipeline + exécution scripts |
+| L3 | > 60 min | Architecte | Décision restore / escalade métier |
