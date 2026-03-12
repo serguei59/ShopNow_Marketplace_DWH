@@ -57,9 +57,9 @@ az sql db ltr-policy show \
 log "INFO — Liste des backups LTR disponibles"
 
 az sql db ltr-backup list \
-  --location    francecentral \
-  --server-name "${SERVER_NAME}" \
-  --database-name "${DB_NAME}" \
+  --location  francecentral \
+  --server    "${SERVER_NAME}" \
+  --database  "${DB_NAME}" \
   --output table | tee -a "${LOG_FILE}"
 
 log "INFO — Configuration LTR terminée. Log : ${LOG_FILE}"
