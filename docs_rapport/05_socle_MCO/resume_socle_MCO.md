@@ -48,3 +48,62 @@
 | Backups complet + partiel | `sql/backups/` (Phase 3) | [x] Fait |
 | Documentation MCO (runbooks) | `docs/` (Phase 4) | [x] Fait |
 | Maintenance index + intégrité | `sql/maintenance/` (Phase 4) | [x] Fait |
+
+---
+
+## Tests en conditions réelles (2026-03-12)
+
+### `backup_ltr_config.sh` — Politique LTR
+
+Exécuté contre `sql-server-rg-e6-sbuasa` / `dwh-shopnow` :
+
+```
+weeklyRetention : P4W
+monthlyRetention: P12M
+yearlyRetention : P5Y
+```
+
+Résultat : **OK** — politique appliquée et vérifiée via `az sql db ltr-policy show`.
+
+---
+
+### `backup_full.sh` — Export BACPAC
+
+Export BACPAC complet exécuté avec auto-création du storage account :
+
+```
+Storage account : stshopnowbackup (créé automatiquement)
+Container       : sql-backups
+Fichier         : weekly/dwh-shopnow-2026-03-12.bacpac
+Taille          : 2,4 MB
+```
+
+Résultat : **OK** — fichier vérifié via `az storage blob list`.
+
+---
+
+### `check_integrity.sql` — Contrôle d'intégrité
+
+Exécuté sur `dwh-shopnow` le 2026-03-12 à 11h02 UTC :
+
+| Contrôle | Résultat | Statut |
+|----------|----------|--------|
+| Orphelins `fact_order → dim_customer` | 0 | ✓ OK |
+| Orphelins `fact_order → dim_product` | 0 | ✓ OK |
+| NULLs `dim_customer.email` | 0 | ✓ OK |
+| NULLs `dim_customer.name` | 0 | ✓ OK |
+| **NULLs `fact_order.unit_price`** | **3 004** | **⚠ ATTENTION** |
+| NULLs `fact_order.quantity` | 0 | ✓ OK |
+| NULLs `fact_clickstream.session_id` | 0 | ✓ OK |
+| **Score cohérence global** | **75/100** | **ATTENTION** |
+
+**Volumétrie détectée :**
+
+| Table | Lignes | Taille |
+|-------|--------|--------|
+| `fact_clickstream` | 30 219 | 65,63 MB |
+| `fact_order` | 3 004 | 62,32 MB |
+| `dim_product` | 953 | 1,76 MB |
+| `dim_customer` | 100 | 0,32 MB |
+
+**Anomalie identifiée :** `unit_price` NULL sur la totalité des lignes `fact_order` (3 004/3 004). Cause probable : mapping Stream Analytics incomplet sur le champ `unit_price` en provenance de l'Event Hub `orders`. Le script de contrôle a correctement détecté et signalé cette anomalie — démonstration de l'efficacité du dispositif de supervision C16.
