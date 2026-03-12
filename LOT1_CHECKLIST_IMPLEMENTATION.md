@@ -269,7 +269,7 @@ docker push blackphoenix2020/event_hub_producers:latest
 ---
 
 #### Étape 12 — `sql/backups/backup_schedule.md`
-- **Statut :** [ ] À faire
+- **Statut :** [x] Fait — 2026-03-12
 - **Critère C16 :** Tâches planifiées de backup programmées et configurées
 - **Contenu :**
   - Tableau planning : Full BACPAC hebdo (dimanche 02h00), LTR mensuel (1er du mois), LTR annuel (1er janvier)
@@ -284,7 +284,7 @@ docker push blackphoenix2020/event_hub_producers:latest
 ---
 
 #### Étape 13 — `sql/backups/backup_full.sh`
-- **Statut :** [ ] À faire
+- **Statut :** [x] Fait — 2026-03-12
 - **Critère C16 :** Backup complet planifié et configuré, résultats attendus produits
 - **Contenu :** Script Azure CLI — `az sql db export` vers Azure Blob Storage (BACPAC), avec variables d'environnement pour les credentials, log de résultat, notification email en cas d'échec
 - **Note technique :** Azure SQL Database (non Managed Instance) ne supporte pas `BACKUP DATABASE TO DISK`. Le BACPAC via `az sql db export` est l'équivalent du backup complet portable.
@@ -294,7 +294,7 @@ docker push blackphoenix2020/event_hub_producers:latest
 ---
 
 #### Étape 14 — `sql/backups/backup_ltr_config.sh`
-- **Statut :** [ ] À faire
+- **Statut :** [x] Fait — 2026-03-12
 - **Critère C16 :** Backup partiel planifié et configuré
 - **Contenu :** Script Azure CLI — `az sql db ltr-policy set` pour configurer Long-Term Retention (4 semaines, 12 mois, 5 ans) + `az sql db ltr-backup list` pour vérifier les backups existants
 - **Justification jury :** Le LTR est la réponse Azure SQL au backup différentiel/partiel. Utiliser la solution native prouve la maîtrise de la plateforme.
@@ -303,7 +303,7 @@ docker push blackphoenix2020/event_hub_producers:latest
 ---
 
 #### Étape 15 — `sql/backups/restore_procedure.sh`
-- **Statut :** [ ] À faire
+- **Statut :** [x] Fait — 2026-03-12
 - **Critère C16 :** Les tâches planifiées produisent les résultats attendus (inclut la restauration)
 - **Contenu :** Deux cas de restauration :
   - PITR (Point-In-Time Restore) — `az sql db restore` — pour corruption ou suppression récente (≤ 35j)
@@ -318,7 +318,7 @@ docker push blackphoenix2020/event_hub_producers:latest
 ---
 
 #### Étape 16 — `sql/maintenance/check_integrity.sql`
-- **Statut :** [ ] À faire
+- **Statut :** [x] Fait — 2026-03-12
 - **Critère C16 :** Tâches de maintenance priorisées selon objectifs
 - **Contenu :**
   - Vérification intégrité logique : comptages, orphelins (fact_order sans dim_customer), valeurs nulles critiques
@@ -331,7 +331,7 @@ docker push blackphoenix2020/event_hub_producers:latest
 ---
 
 #### Étape 17 — `sql/maintenance/index_maintenance.sql`
-- **Statut :** [ ] À faire
+- **Statut :** [x] Fait — 2026-03-12
 - **Critère C16 :** Tâches de maintenance — performance
 - **Contenu :**
   - Analyse fragmentation : `sys.dm_db_index_physical_stats` — seuils 10% (REORGANIZE) / 30% (REBUILD)
@@ -343,7 +343,7 @@ docker push blackphoenix2020/event_hub_producers:latest
 ---
 
 #### Étape 18 — `sql/README.md`
-- **Statut :** [ ] À faire
+- **Statut :** [x] Fait — 2026-03-12
 - **Critère C16 :** Documentation structurée
 - **Contenu :** Index du dossier sql/, planning de maintenance, références scripts, note sur les spécificités Azure SQL
 - **Dépendances :** Étapes 12 à 17
@@ -355,7 +355,7 @@ docker push blackphoenix2020/event_hub_producers:latest
 ---
 
 #### Étape 19 — `docs/05_socle_MCO/supervision_logging.md`
-- **Statut :** [ ] À faire (remplace stub 5 lignes)
+- **Statut :** [x] Fait — 2026-03-11
 - **Critère C16 :** Journalisation, documentation cas d'usage
 - **Contenu :**
   - Architecture de logs : Azure SQL Event Log → DMV → Azure Monitor → Log Analytics
@@ -369,7 +369,7 @@ docker push blackphoenix2020/event_hub_producers:latest
 ---
 
 #### Étape 20 — `docs/05_socle_MCO/alerting_SLA.md`
-- **Statut :** [ ] À faire (remplace stub 5 lignes)
+- **Statut :** [x] Fait — 2026-03-11
 - **Critère C16 :** SLA, système d'alerte, tableau de bord
 - **Contenu :**
   - Tableau SLA formel : indicateur / cible / seuil alerte / seuil critique / fréquence mesure / responsable
@@ -382,7 +382,7 @@ docker push blackphoenix2020/event_hub_producers:latest
 ---
 
 #### Étape 21 — `docs/05_socle_MCO/backups_et_DRP.md`
-- **Statut :** [ ] À faire (remplace stub 5 lignes)
+- **Statut :** [x] Fait — 2026-03-12
 - **Critère C16 :** Backups, documentation cas d'usage
 - **Contenu :**
   - Architecture backup : PITR natif + BACPAC hebdo + LTR long terme
@@ -395,7 +395,7 @@ docker push blackphoenix2020/event_hub_producers:latest
 ---
 
 #### Étape 22 — `docs/05_socle_MCO/processus_MCO.md`
-- **Statut :** [ ] À faire (remplace stub 10 lignes)
+- **Statut :** [x] Fait — 2026-03-12
 - **Critère C16 :** Tâches priorisées, tâches assignées (RACI)
 - **Contenu :**
   - Matrice priorisation P1/P2/P3 : délais de prise en charge, délais résolution, escalade
@@ -410,7 +410,7 @@ docker push blackphoenix2020/event_hub_producers:latest
 ---
 
 #### Étape 23 — `docs/07_securite/gestion_identites.md`
-- **Statut :** [ ] À faire (remplace stub 3 lignes)
+- **Statut :** [x] Fait — 2026-03-11
 - **Critère C16 :** Accès configurés, documentation, RGPD
 - **Contenu :**
   - Architecture Azure AD : groupes par rôle, MFA obligatoire pour Admin et Data Engineer
@@ -424,7 +424,7 @@ docker push blackphoenix2020/event_hub_producers:latest
 ---
 
 #### Étape 24 — `docs/07_securite/roles_permissions.md`
-- **Statut :** [ ] À faire (remplace stub 10 lignes)
+- **Statut :** [x] Fait — 2026-03-11
 - **Critère C16 :** Accès configurés conformément au besoin, documentation
 - **Contenu :**
   - Matrice complète 5 rôles × permissions (transcription narrative du RBAC mapping)
@@ -441,7 +441,7 @@ docker push blackphoenix2020/event_hub_producers:latest
 ---
 
 #### Étape 25 — `docs_rapport/05_socle_MCO/resume_socle_MCO.md`
-- **Statut :** [ ] À faire (mise à jour avec ✅ et références)
+- **Statut :** [x] Fait — 2026-03-12
 - **Critère C16 :** Couverture complète dans le livrable certifiant
 - **Contenu :**
   - Tableau des 14 critères C16 avec statut [x] et pointeur vers l'artefact
@@ -452,7 +452,7 @@ docker push blackphoenix2020/event_hub_producers:latest
 ---
 
 #### Étape 26 — `docs_rapport/07_securite/resume_securite.md`
-- **Statut :** [ ] À faire (mise à jour avec références RGPD)
+- **Statut :** [x] Fait — 2026-03-11
 - **Critère C16 :** RGPD dans le livrable certifiant
 - **Contenu :**
   - Résumé RBAC avec lien vers matrice
@@ -468,32 +468,32 @@ docker push blackphoenix2020/event_hub_producers:latest
 |---|---------|--------|---------|
 | P1 | Corrections chemins Terraform + subscription_id | [x] | Prérequis infra |
 | P2 | `terraform apply` — plateforme déployée | [x] | Prérequis infra |
-| 1 | `security/rgpd/registre_traitements.md` | [ ] | RGPD registre |
-| 2 | `security/rbac/rbac_mapping.md` | [ ] | RBAC accès |
-| 3 | `security/rgpd/procedures_conformite.md` | [ ] | RGPD procédures |
-| 4 | `security/README.md` | [ ] | — |
-| 5 | `monitoring/queries/log_errors_last24h.sql` | [ ] | Journalisation |
-| 6 | `monitoring/queries/data_freshness.sql` | [ ] | Alertes ingestion |
-| 7 | `monitoring/queries/sla_availability.sql` | [ ] | SLA |
-| 8 | `monitoring/queries/pipeline_latency.sql` | [ ] | Latence |
-| 9 | `monitoring/dashboards/dashboard_sla_spec.md` | [ ] | Dashboard |
-| 10 | `monitoring/dashboards/alert_rules_spec.md` | [ ] | Alerting |
-| 11 | `monitoring/README.md` | [ ] | — |
-| 12 | `sql/backups/backup_schedule.md` | [ ] | Planning backup |
-| 13 | `sql/backups/backup_full.sh` | [ ] | Backup complet |
-| 14 | `sql/backups/backup_ltr_config.sh` | [ ] | Backup partiel |
-| 15 | `sql/backups/restore_procedure.sh` | [ ] | Restauration |
-| 16 | `sql/maintenance/check_integrity.sql` | [ ] | Intégrité |
-| 17 | `sql/maintenance/index_maintenance.sql` | [ ] | Index |
-| 18 | `sql/README.md` | [ ] | — |
-| 19 | `docs/05_socle_MCO/supervision_logging.md` | [ ] | Journalisation |
-| 20 | `docs/05_socle_MCO/alerting_SLA.md` | [ ] | SLA alertes |
-| 21 | `docs/05_socle_MCO/backups_et_DRP.md` | [ ] | Backup |
-| 22 | `docs/05_socle_MCO/processus_MCO.md` | [ ] | RACI / P1P2P3 |
-| 23 | `docs/07_securite/gestion_identites.md` | [ ] | Accès RGPD |
-| 24 | `docs/07_securite/roles_permissions.md` | [ ] | RBAC |
-| 25 | `docs_rapport/05_socle_MCO/resume_socle_MCO.md` | [ ] | C16 synthèse |
-| 26 | `docs_rapport/07_securite/resume_securite.md` | [ ] | RGPD synthèse |
+| 1 | `security/rgpd/registre_traitements.md` | [x] | RGPD registre |
+| 2 | `security/rbac/rbac_mapping.md` | [x] | RBAC accès |
+| 3 | `security/rgpd/procedures_conformite.md` | [x] | RGPD procédures |
+| 4 | `security/README.md` | [x] | — |
+| 5 | `monitoring/queries/log_errors_last24h.sql` | [x] | Journalisation |
+| 6 | `monitoring/queries/data_freshness.sql` | [x] | Alertes ingestion |
+| 7 | `monitoring/queries/sla_availability.sql` | [x] | SLA |
+| 8 | `monitoring/queries/pipeline_latency.sql` | [x] | Latence |
+| 9 | `monitoring/dashboards/dashboard_sla_spec.md` | [x] | Dashboard |
+| 10 | `monitoring/dashboards/alert_rules_spec.md` | [x] | Alerting |
+| 11 | `monitoring/README.md` | [x] | — |
+| 12 | `sql/backups/backup_schedule.md` | [x] | Planning backup |
+| 13 | `sql/backups/backup_full.sh` | [x] | Backup complet |
+| 14 | `sql/backups/backup_ltr_config.sh` | [x] | Backup partiel |
+| 15 | `sql/backups/restore_procedure.sh` | [x] | Restauration |
+| 16 | `sql/maintenance/check_integrity.sql` | [x] | Intégrité |
+| 17 | `sql/maintenance/index_maintenance.sql` | [x] | Index |
+| 18 | `sql/README.md` | [x] | — |
+| 19 | `docs/05_socle_MCO/supervision_logging.md` | [x] | Journalisation |
+| 20 | `docs/05_socle_MCO/alerting_SLA.md` | [x] | SLA alertes |
+| 21 | `docs/05_socle_MCO/backups_et_DRP.md` | [x] | Backup |
+| 22 | `docs/05_socle_MCO/processus_MCO.md` | [x] | RACI / P1P2P3 |
+| 23 | `docs/07_securite/gestion_identites.md` | [x] | Accès RGPD |
+| 24 | `docs/07_securite/roles_permissions.md` | [x] | RBAC |
+| 25 | `docs_rapport/05_socle_MCO/resume_socle_MCO.md` | [x] | C16 synthèse |
+| 26 | `docs_rapport/07_securite/resume_securite.md` | [x] | RGPD synthèse |
 
 ---
 

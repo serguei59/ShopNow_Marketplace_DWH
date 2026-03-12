@@ -45,5 +45,6 @@
 | Système d'alerte activé | `alert_rules_spec.md` | [x] Fait |
 | Indicateurs basés sur SLA | `sla_availability.sql` | [x] Fait |
 | Tableau de bord indicateurs | `dashboard_sla_spec.md` | [x] Fait |
-| Backups complet + partiel | `sql/backups/` (Phase 3) | [ ] À faire |
-| Documentation MCO (runbooks) | `docs/` (Phase 4) | [ ] À faire |
+| Backups complet + partiel | `sql/backups/` (Phase 3) | [x] Fait |
+| Documentation MCO (runbooks) | `docs/` (Phase 4) | [x] Fait |
+| Maintenance index + intégrité | `sql/maintenance/` (Phase 4) | [x] Fait |
