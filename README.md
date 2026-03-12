@@ -62,8 +62,9 @@ _events_producers/  Producteurs Python Faker (ACI)
 
 ## Documentation
 
-- **Site complet** : `https://serguei59.github.io/ShopNow_Marketplace_DWH/`
-- **Livrable E6** : `https://serguei59.github.io/ShopNow_Marketplace_DWH/rapport/`
+- **Site complet** : [https://serguei59.github.io/ShopNow_Marketplace_DWH/](https://serguei59.github.io/ShopNow_Marketplace_DWH/)
+- **Livrable E6** : [https://serguei59.github.io/ShopNow_Marketplace_DWH/rapport/](https://serguei59.github.io/ShopNow_Marketplace_DWH/rapport/)
+- **Rapport PDF** : [`rapport_e6_full.pdf`](rapport_e6_full.pdf)
 
 Déployé automatiquement sur GitHub Pages à chaque push sur `main`.
 
