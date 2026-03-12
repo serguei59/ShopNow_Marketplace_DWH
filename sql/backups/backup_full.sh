@@ -18,7 +18,7 @@ STORAGE_ACCOUNT="${STORAGE_ACCOUNT:-stshopnowbackup}"
 CONTAINER_NAME="${CONTAINER_NAME:-sql-backups}"
 ADMIN_LOGIN="${SQL_ADMIN_LOGIN:-sqladmin}"
 ADMIN_PASSWORD="${SQL_ADMIN_PASSWORD:?Erreur : SQL_ADMIN_PASSWORD non défini}"
-STORAGE_KEY="${STORAGE_KEY:?Erreur : STORAGE_KEY non défini}"
+LOCATION="${LOCATION:-francecentral}"
 NOTIFICATION_EMAIL="${NOTIFICATION_EMAIL:-dataeng@shopnow.fr}"
 
 DATE=$(date -u +%Y-%m-%d)
@@ -44,7 +44,60 @@ log "INFO — Vérification connexion Azure CLI"
 az account show --query "id" -o tsv || { log "ERREUR — Non connecté à Azure"; notify_failure; exit 1; }
 
 # ------------------------------------------------------------
-# 2. Lancement export BACPAC
+# 2. Création storage account + container si inexistants
+# ------------------------------------------------------------
+log "INFO — Vérification storage account : ${STORAGE_ACCOUNT}"
+STORAGE_EXISTS=$(az storage account show \
+  --name "${STORAGE_ACCOUNT}" \
+  --resource-group "${RESOURCE_GROUP}" \
+  --query "name" -o tsv 2>/dev/null || echo "")
+
+if [ -z "${STORAGE_EXISTS}" ]; then
+    log "INFO — Storage account absent, création en cours..."
+    az storage account create \
+      --name "${STORAGE_ACCOUNT}" \
+      --resource-group "${RESOURCE_GROUP}" \
+      --location "${LOCATION}" \
+      --sku Standard_LRS \
+      --kind StorageV2 \
+      --access-tier Hot \
+      --min-tls-version TLS1_2 \
+      --output none
+    log "INFO — Attente propagation storage account (30s)..."
+    sleep 30
+    log "OK — Storage account créé : ${STORAGE_ACCOUNT}"
+else
+    log "OK — Storage account existant : ${STORAGE_ACCOUNT}"
+fi
+
+STORAGE_KEY=$(az storage account keys list \
+  --account-name "${STORAGE_ACCOUNT}" \
+  --resource-group "${RESOURCE_GROUP}" \
+  --query "[0].value" -o tsv)
+
+log "INFO — Vérification container : ${CONTAINER_NAME}"
+CONTAINER_EXISTS=$(az storage container show \
+  --name "${CONTAINER_NAME}" \
+  --account-name "${STORAGE_ACCOUNT}" \
+  --account-key "${STORAGE_KEY}" \
+  --query "name" -o tsv 2>/dev/null || echo "")
+
+if [ -z "${CONTAINER_EXISTS}" ]; then
+    log "INFO — Container absent, création en cours..."
+    az storage container create \
+      --name "${CONTAINER_NAME}" \
+      --account-name "${STORAGE_ACCOUNT}" \
+      --account-key "${STORAGE_KEY}" \
+      --output none
+    log "INFO — Attente propagation container (10s)..."
+    sleep 10
+    log "OK — Container créé : ${CONTAINER_NAME}"
+else
+    log "OK — Container existant : ${CONTAINER_NAME}"
+fi
+
+# ------------------------------------------------------------
+# 3. Lancement export BACPAC
 # ------------------------------------------------------------
 log "INFO — Démarrage export BACPAC : ${DB_NAME} → ${STORAGE_URI}"
 
@@ -62,7 +115,7 @@ OPERATION_ID=$(az sql db export \
 log "INFO — Export lancé, opération : ${OPERATION_ID}"
 
 # ------------------------------------------------------------
-# 3. Attente fin d'opération (polling toutes les 60s, max 60 min)
+# 4. Attente fin d'opération (polling toutes les 60s, max 60 min)
 # ------------------------------------------------------------
 MAX_WAIT=3600
 ELAPSED=0
@@ -100,13 +153,13 @@ fi
 # 4. Vérification présence du fichier dans Blob Storage
 # ------------------------------------------------------------
 log "INFO — Vérification présence BACPAC dans Blob Storage"
-az storage blob show \
+BACPAC_SIZE=$(az storage blob show \
   --account-name "${STORAGE_ACCOUNT}" \
   --container-name "${CONTAINER_NAME}" \
   --name "weekly/${BACPAC_FILENAME}" \
   --account-key "${STORAGE_KEY}" \
-  --query "properties.contentLength" -o tsv \
-  | xargs -I{} log "OK — Taille BACPAC : {} octets"
+  --query "properties.contentLength" -o tsv 2>/dev/null || echo "inconnu")
+log "OK — Taille BACPAC : ${BACPAC_SIZE} octets"
 
 log "INFO — Backup complet terminé : ${BACPAC_FILENAME}"
 log "INFO — Log complet : ${LOG_FILE}"
