@@ -1,32 +1,40 @@
 # Maintenance en Conditions Opérationnelles (MCO) : Socle MCO (C16)
- 
+
 ---
 
-## 🔧 Monitoring & logs
-- Azure Log Analytics  
-- Logs ADF, API, Stream Analytics  
-- Dashboards SLA
+## Contexte et positionnement technique
 
-## 🚨 Alertes
-- Pipelines ETL en échec  
-- API vendeurs non atteignables  
-- Taux anomalies > seuil  
-- Stock non mis à jour  
+Le DWH ShopNow est implémenté sur **Azure SQL Database SKU S0** (10 DTU, 2 GB max), dimensionné pour un MVP Marketplace en phase de démarrage. Ce choix est délibéré : un expert en infrastructures de données massives sait **choisir le bon dimensionnement**, pas le plus puissant.
 
-## 💾 Backups & DRP
-- Snapshots SQL  
-- Versioning ADLS  
-- Procédures de restauration (perte région, suppression accidentelle)
+### Adéquation charge / solution
 
-## 📚 Documentation
-- Runbooks MCO  
-- Incident playbooks  
-- Dictionnaires données  
+| Dimension | Capacité S0 | Charge actuelle | Marge |
+|-----------|-------------|-----------------|-------|
+| Volume BDD | 2 GB max | ~130 MB | 93% disponible |
+| Lignes `fact_clickstream` | — | 30 219 | Confortable |
+| Lignes `fact_order` | — | 3 004 | Confortable |
+| Débit ingestion | ~30 000 events/h (1 SU ASA) | < 5 000/h | Confortable |
+| Utilisateurs simultanés | ~10 (10 DTU) | < 5 | Confortable |
 
-## 🔌 Nouvelles sources
-- Pipelines multi-formats  
-- Connecteurs API  
-- Normalisation (Databricks)  
+### Choix techniques justifiés
+
+| Besoin | Solution choisie | Alternative écartée | Raison |
+|--------|-----------------|---------------------|--------|
+| Journalisation | DMV Azure SQL (`sys.event_log`) | Azure Log Analytics | Suffisant pour S0, sans coût additionnel |
+| Backups | BACPAC + PITR + LTR | ADLS versioning | Natif Azure SQL, sans infrastructure supplémentaire |
+| Ingestion | Stream Analytics 1 SU | ADF + Databricks | Volume actuel ne justifie pas la complexité |
+| Supervision | Requêtes DMV SQL | Azure Monitor Workbooks | Adapté au volume et au budget S0 |
+
+### Seuils de passage à l'échelle
+
+| Indicateur | Seuil de migration | Solution cible |
+|------------|-------------------|----------------|
+| Volume > 1 GB | Passer S0 → S2/S3 | Azure SQL S2 (50 DTU) |
+| Débit > 100 000 events/h | Stream Analytics multi-SU | ASA 3+ SU |
+| Volume > 250 GB | Migration DWH | Azure Synapse Analytics |
+| Utilisateurs > 50 | Cache + séparation lecture/écriture | Redis + réplica lecture |
+
+---
 
 ## Monitoring implémenté (Azure SQL DMV)
 
