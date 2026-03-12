@@ -8,9 +8,13 @@
 -- -----------------------------------------------------------------------------
 -- 1. Ajout de la colonne vendor_id dans dim_product
 -- -----------------------------------------------------------------------------
-ALTER TABLE dbo.dim_product
-ADD vendor_id NVARCHAR(50) NULL;
+IF NOT EXISTS (
+    SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS
+    WHERE TABLE_NAME = 'dim_product' AND COLUMN_NAME = 'vendor_id'
+)
+    ALTER TABLE dbo.dim_product ADD vendor_id NVARCHAR(50) NULL;
 -- NULL par défaut : compatibilité avec les produits existants sans vendeur assigné
+GO
 
 -- -----------------------------------------------------------------------------
 -- 2. Mise à jour des produits existants — assignation vendeur par catégorie
@@ -31,6 +35,8 @@ END;
 -- car dim_product n'a pas besoin de l'historique SCD2 pour ce rattachement
 -- -----------------------------------------------------------------------------
 -- Index préalable requis sur dim_vendor.vendor_id pour la FK
+SET QUOTED_IDENTIFIER ON;
+GO
 CREATE UNIQUE NONCLUSTERED INDEX UX_dim_vendor_vendor_id_current
     ON dbo.dim_vendor (vendor_id)
     WHERE is_current = 1;

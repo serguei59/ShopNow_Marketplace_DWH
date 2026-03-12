@@ -68,12 +68,55 @@ gère automatiquement les trois cas :
 
 ---
 
-## Exemple SCD2 en action
+## Tests en conditions réelles — 2026-03-12
+
+### Commande de déploiement
+```bash
+sqlcmd -S sql-server-rg-e6-sbuasa.database.windows.net \
+  -U sqladmin -P '***' -d dwh-shopnow \
+  -i sql/scd2/dim_vendor_create.sql -C
+# → (4 rows affected) — 4 vendeurs insérés
+
+sqlcmd ... -i sql/scd2/dim_vendor_merge.sql -C
+# → SCD2 — nouvelle version créée pour : V001
+# → INSERT — nouveau vendeur : V005
+
+sqlcmd ... -i sql/scd2/fact_vendor_stock.sql -C
+# → (25 rows affected) — stocks initiaux 5 vendeurs × 5 produits
+
+sqlcmd ... -i sql/scd2/dim_product_update.sql -C
+# → (972 rows affected) — produits assignés aux vendeurs
+```
+
+### SCD2 en action — V001 commission 12.50 → 14.00
 
 ```
-vendor_sk  vendor_id  vendor_name       commission_rate  valid_from            valid_to              is_current
-1          V001       TechGadgets SAS   12.50            2026-03-12 08:00:00   2026-03-12 11:00:00   0
-5          V001       TechGadgets SAS   14.00            2026-03-12 11:00:00   NULL                  1
+vendor_sk  vendor_id  vendor_name      commission_rate  valid_from                   valid_to                     is_current
+1          V001       TechGadgets SAS  12.50            2026-03-12 12:40:56.203      2026-03-12 12:41:48.559      0
+5          V001       TechGadgets SAS  14.00            2026-03-12 12:41:48.559      NULL                         1
+```
+
+Ancienne version fermée (`valid_to` renseigné, `is_current=0`), nouvelle version active (`is_current=1`).
+
+### Résultats dim_product enrichi
+
+| Métrique | Valeur |
+|----------|--------|
+| Produits total | 972 |
+| Produits sans vendeur | **0** |
+| V001 TechGadgets (Electronics + défaut) | 587 |
+| V002 ModaStyle (Clothing) | 195 |
+| V003 HomeDecor (Home) | 190 |
+
+### Vue vw_vendor_stock_disponible
+
+```
+vendor_id  vendor_name      product_name                        quantity_available  stock_net
+V001       TechGadgets SAS  Persevering stable alliance         85                  80
+V001       TechGadgets SAS  Universal actuating Local Area...   495                 482
+V002       ModaStyle GmbH   Persevering stable alliance         24                  14
+...
+(25 lignes — 5 vendeurs actifs × 5 produits)
 ```
 
 Requête pour accéder à la version courante :

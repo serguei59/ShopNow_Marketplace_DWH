@@ -16,7 +16,7 @@ CREATE TABLE dbo.fact_vendor_stock (
     vendor_sk           INT                 NOT NULL,
     -- FK vers dim_vendor.vendor_sk (surrogate key SCD2 — version active)
 
-    product_id          INT                 NOT NULL,
+    product_id          VARCHAR(50)         NOT NULL,
     -- FK vers dim_product.product_id
 
     -- Mesures
@@ -80,6 +80,7 @@ WHERE v.is_current = 1
 -- -----------------------------------------------------------------------------
 -- 4. Vue analytique — stock disponible net par vendeur/produit
 -- -----------------------------------------------------------------------------
+GO
 CREATE OR ALTER VIEW dbo.vw_vendor_stock_disponible AS
 SELECT
     v.vendor_id,
